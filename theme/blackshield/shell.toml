@@ -1,0 +1,148 @@
+# Blackshield shell. Matte plate, blood edge, bone type. No gradients.
+# A gradient on this livery reads as synthwave. This is armor.
+
+[bar]
+background       = "#0C0C10"
+background-alpha = 1.0
+text             = "#D8D3C8"
+active           = "#C1121F"
+scale-with-font  = false
+size-horizontal  = 34
+size-vertical    = 36
+
+[hyprland]
+active-border            = "#C1121F"
+active-border-foreground = "#C1121F"
+
+[controls]
+normal-color        = "#8F959C"
+normal-fill-alpha   = 0.04
+normal-border       = "#8F959C"
+normal-border-width = 1
+normal-border-alpha = 0.28
+
+hover-cursor-color        = "#C1121F"
+hover-cursor-fill-alpha   = 0.12
+hover-cursor-border       = "#C1121F"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 0.85
+
+focus-color        = "#C1121F"
+focus-fill-alpha   = 0.14
+focus-border       = "#C1121F"
+focus-border-width = 1
+focus-border-alpha = 1.0
+
+selected-color        = "#C1121F"
+selected-fill-alpha   = 0.22
+selected-border       = "#C1121F"
+selected-border-width = 1
+selected-border-alpha = 1.0
+
+pressed-color      = "#E5383B"
+pressed-fill-alpha = 0.28
+selection-color    = "#C1121F"
+selection-fill-alpha = 0.40
+
+[spacing]
+scale = 1.0
+scale-with-font = false
+
+[font]
+base-size = 13
+
+[popups]
+background       = "#101014"
+background-alpha = 0.97
+text             = "#D8D3C8"
+border           = "#C1121F"
+border-alpha     = 1.0
+border-width     = 1
+border-width-top = 2
+
+[tooltip]
+background       = "#0C0C10"
+background-alpha = 0.98
+text             = "#D8D3C8"
+border           = "#8F959C"
+border-alpha     = 0.55
+border-width     = 1
+
+[notifications]
+background       = "#101014"
+background-alpha = 0.97
+text             = "#D8D3C8"
+border           = "#C1121F"
+border-alpha     = 1.0
+border-width     = 1
+border-width-top = 2
+countdown        = "#C1121F"
+
+[launcher]
+background                = "#0C0C10"
+background-alpha          = 0.96
+text                      = "#D8D3C8"
+border                    = "#C1121F"
+border-alpha              = 1.0
+border-width              = 1
+border-width-top          = 2
+scrim                     = "#070709"
+scrim-alpha               = 0.62
+selected-background       = "#C1121F"
+selected-background-alpha = 0.28
+selected-text             = "#F5F1E8"
+selected-border           = "#C1121F"
+selected-border-alpha     = 1.0
+
+[menu]
+background                = "#0C0C10"
+background-alpha          = 0.98
+text                      = "#D8D3C8"
+border                    = "#C1121F"
+border-alpha              = 1.0
+border-width              = 1
+border-width-top          = 2
+scrim                     = "#070709"
+scrim-alpha               = 0.62
+selected-background       = "#C1121F"
+selected-background-alpha = 0.28
+selected-text             = "#F5F1E8"
+selected-border           = "#C1121F"
+selected-border-alpha     = 1.0
+
+[polkit]
+background       = "#0C0C10"
+background-alpha = 0.98
+text             = "#D8D3C8"
+text-error       = "#E5383B"
+border           = "#C1121F"
+border-error     = "#E5383B"
+border-alpha     = 1.0
+border-width     = 1
+border-width-top = 2
+scrim            = "#070709"
+scrim-alpha      = 0.68
+accent           = "#C1121F"
+
+[lock]
+background       = "#0C0C10"
+background-alpha = 0.86
+text             = "#D8D3C8"
+placeholder      = "#8F959C"
+text-error       = "#E5383B"
+border           = "#8F959C"
+border-active    = "#C1121F"
+border-error     = "#E5383B"
+border-alpha     = 1.0
+border-width     = 1
+selection        = "#C1121F"
+selection-alpha  = 0.45
+
+[image-picker]
+scrim                   = "#070709"
+scrim-alpha             = 0.62
+text                    = "#D8D3C8"
+selected-border         = "#C1121F"
+selected-border-alpha   = 1.0
+unselected-border       = "#8F959C"
+unselected-border-alpha = 0.35

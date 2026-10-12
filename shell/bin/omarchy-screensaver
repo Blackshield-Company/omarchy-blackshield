@@ -1,0 +1,149 @@
+#!/bin/bash
+# Blackshield idle plate.
+# omarchy-launch-screensaver execs `omarchy-screensaver` by name. Hyprland's
+# PATH is prepended with this directory so this file wins over /usr/bin.
+# Stock ttfx gradients are purple/cyan. This desk is steel, blood, and bone.
+
+INPUT="${HOME}/.config/omarchy/branding/screensaver.txt"
+
+screensaver_in_focus() {
+  hyprctl activewindow -j | jq -e '.class == "org.omarchy.screensaver"' >/dev/null 2>&1
+}
+
+exit_screensaver() {
+  hyprctl eval 'hl.config({ cursor = { invisible = false } })' &>/dev/null \
+    || hyprctl keyword cursor:invisible false &>/dev/null \
+    || true
+  pkill -x ttfx 2>/dev/null
+  pkill -f '[o]rg.omarchy.screensaver' 2>/dev/null
+  exit 0
+}
+
+trap exit_screensaver SIGINT SIGTERM SIGHUP SIGQUIT
+
+# Matte field. Not void black, not the theme purple.
+printf '\033]11;rgb:10/10/14\007'
+printf '\033]10;rgb:d8/d3/c8\007'
+
+hyprctl eval 'hl.config({ cursor = { invisible = true } })' &>/dev/null \
+  || hyprctl keyword cursor:invisible true &>/dev/null
+
+tty=$(tty 2>/dev/null)
+
+# Terminals open at 80x24 and resize once the compositor reports the window.
+# ttfx measures once, at startup. Wait or the plate paints into the corner.
+wait_for_terminal_resize() {
+  local deadline=$((SECONDS + 2))
+  while ((SECONDS < deadline)) && [[ $(stty size 2>/dev/null) == "24 80" ]]; do
+    sleep 0.02
+  done
+}
+
+wait_for_terminal_resize
+
+COMMON=(
+  -i "$INPUT"
+  --frame-rate 120
+  --canvas-width 0
+  --canvas-height 0
+  --reuse-canvas
+  --anchor-canvas c
+  --anchor-text c
+  --no-eol
+  --no-restore-cursor
+  --existing-color-handling always
+  --terminal-background-color "#101014"
+)
+
+# `always` keeps the authored blood cross and bone wordmark at rest.
+# Motion colors are still pinned so a frame mid-effect cannot go synthwave.
+run_one() {
+  local n=$((RANDOM % 12))
+  case "$n" in
+  0)
+    ttfx "${COMMON[@]}" highlight \
+      --highlight-brightness 1.35 \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  1)
+    ttfx "${COMMON[@]}" burn \
+      --starting-color 8F959C \
+      --burn-colors F5F1E8 C9A227 E5383B C1121F 3A1518 \
+      --smoke-chance 0.2 \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  2)
+    ttfx "${COMMON[@]}" laseretch \
+      --laser-gradient-stops F5F1E8 E5383B C1121F \
+      --spark-gradient-stops F5F1E8 C9A227 E5383B 3A1518 \
+      --cool-gradient-stops D8D3C8 8F959C \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  3)
+    ttfx "${COMMON[@]}" rain \
+      --rain-colors 3A1518 5C1218 C1121F E5383B C9A227 8F959C \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  4)
+    ttfx "${COMMON[@]}" decrypt \
+      --ciphertext-colors 3A1518 5A3030 8F959C C1121F \
+      --final-gradient-stops D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  5)
+    ttfx "${COMMON[@]}" thunderstorm \
+      --lightning-color F5F1E8 \
+      --glowing-text-color E5383B \
+      --spark-glow-color C1121F \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  6)
+    ttfx "${COMMON[@]}" blackhole \
+      --blackhole-color 8F959C \
+      --star-colors C9A227 E5383B C1121F 8F959C 3A1518 \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  7)
+    ttfx "${COMMON[@]}" waves \
+      --wave-gradient-stops 3A1518 C1121F E5383B C9A227 8F959C \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  8)
+    ttfx "${COMMON[@]}" unstable \
+      --unstable-color E5383B \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  9)
+    ttfx "${COMMON[@]}" expand \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  10)
+    ttfx "${COMMON[@]}" slice \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  *)
+    ttfx "${COMMON[@]}" crumble \
+      --final-gradient-stops 8F959C D8D3C8 C1121F \
+      --final-gradient-direction vertical
+    ;;
+  esac
+}
+
+while true; do
+  run_one &
+  while pgrep -t "${tty#/dev/}" -x ttfx >/dev/null; do
+    if read -r -n1 -t 1 || ! screensaver_in_focus; then
+      exit_screensaver
+    fi
+  done
+done

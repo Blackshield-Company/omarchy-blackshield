@@ -1,0 +1,11 @@
+live-pack/
+*.tar.zst
+*.tar.gz
+auth.json
+.env
+*.key
+id_rsa
+id_ed25519
+*.pem
+__pycache__/
+.venv/

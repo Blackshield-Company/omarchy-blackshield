@@ -1,0 +1,23 @@
+#!/bin/bash
+# Shadow of /usr/bin/omarchy-brightness-display.
+# The shell PATH prefers ~/.config/omarchy/bin, so the lock blank hits this.
+#
+# HDMI-A-3 (iGPU, HGC) treats DPMS-off as a hotplug disconnect and modesets
+# itself back on. DP-2 actually stays off. Lock blank therefore leaves one
+# panel black and the other lit. Skip display-off while the session is locked
+# so both stay on the lock surface. Unlocked `off` still passes through.
+
+set -u
+
+for arg in "$@"; do
+  if [[ $arg == off ]]; then
+    locked=$(omarchy-shell lock isLocked 2>/dev/null || true)
+    if [[ $locked == true ]]; then
+      logger -t hold-wide-mode "skipped display-off during lock (HDMI-A-3 cannot hold DPMS)"
+      exit 0
+    fi
+    break
+  fi
+done
+
+exec /usr/bin/omarchy-brightness-display "$@"

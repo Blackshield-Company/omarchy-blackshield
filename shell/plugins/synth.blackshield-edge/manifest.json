@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "synth.blackshield-edge",
+  "name": "Blackshield edge",
+  "version": "1.0.0",
+  "author": "synth",
+  "description": "Blood rule along the inner edge of the bar. Visual only — does not take clicks.",
+  "kinds": ["panel"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "panel": "Edge.qml"
+  }
+}

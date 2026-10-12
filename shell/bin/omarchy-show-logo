@@ -1,0 +1,26 @@
+#!/bin/bash
+# Blackshield override. Stock omarchy-show-logo hardcodes \033[32m (palette green).
+# ~/.config/omarchy/bin is first on the presentation terminal PATH, so this
+# wins over /usr/share/omarchy/bin. Do not edit the package copy — updates wipe it.
+#
+# Color is the live theme accent. On Blackshield that is blood #C1121F, the
+# same red gum already uses for the update box.
+
+logo="${OMARCHY_PATH:-/usr/share/omarchy}/logo.txt"
+colors="${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/current/theme/colors.toml"
+accent="#C1121F"
+
+if [[ -f "$colors" ]]; then
+  parsed=$(awk -F'"' '/^accent[[:space:]]*=/ { print $2; exit }' "$colors")
+  [[ "$parsed" =~ ^#[0-9A-Fa-f]{6}$ ]] && accent="$parsed"
+fi
+
+hex=${accent#\#}
+r=$((16#${hex:0:2}))
+g=$((16#${hex:2:2}))
+b=$((16#${hex:4:2}))
+
+clear
+printf '\033[38;2;%d;%d;%dm' "$r" "$g" "$b"
+cat "$logo"
+printf '\033[0m\n\n'

@@ -1,0 +1,40 @@
+# Blackshield Mercenary — Omarchy palette
+# Blackshield palette: charcoal, blood red, ember, bone.
+# Iron, parchment, blood. Not neon. Generated app configs come from this file.
+# Do not add .lua or terminal configs here: a theme installed from git has those stripped.
+
+mode = "dark"
+
+accent = "#C1121F"
+selection = "#3A1518"
+muted = "#8A8F98"
+
+background = "#101014"
+dark_background = "#0C0C10"
+darker_background = "#070709"
+lighter_background = "#1A1A20"
+
+foreground = "#D8D3C8"
+dark_foreground = "#8A8F98"
+light_foreground = "#E8E4DB"
+bright_foreground = "#F5F1E8"
+
+# Solid blood. A gradient here reads as synthwave, which this livery is not.
+hyprland_active_border = "rgba(c1121fee)"
+hyprland_inactive_border = "rgba(8f959c66)"
+
+red = "#C1121F"
+yellow = "#C9A227"
+orange = "#E5383B"
+green = "#6A994E"
+cyan = "#4E8F8B"
+blue = "#5B7FA6"
+magenta = "#A4508B"
+brown = "#8F741B"
+
+bright_red = "#E5383B"
+bright_yellow = "#E3C558"
+bright_green = "#8FBF6F"
+bright_cyan = "#74B8B4"
+bright_blue = "#7FA3CC"
+bright_magenta = "#C47AA8"

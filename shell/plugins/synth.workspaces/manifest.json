@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "synth.workspaces",
+  "name": "Workspaces",
+  "version": "1.0.0",
+  "author": "Omarchy",
+  "description": "Workspace numerals, eight total",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Workspaces.qml"
+  },
+  "barWidget": {
+    "displayName": "Workspaces",
+    "description": "Workspace numerals, eight total",
+    "category": "Compositor",
+    "allowMultiple": false
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.workspaces"
+  }
+}

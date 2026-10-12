@@ -1,0 +1,7 @@
+Kelmscott Mono
+Copyright (c) Calvin Jubilee, 2025. All rights reserved.
+Source: https://github.com/seeddisperser/kelmscott-mono
+No license file is published with the font. Installed locally for personal use
+from the author's public release. Do not redistribute.
+Inspired by Morris Troy and Morris Roman. Single weight. Style name rewritten
+locally from Medium to Regular so terminals that request Regular can find it.

@@ -1,0 +1,13 @@
+# Full [lock] replacement. Theme set swaps this section in over shell.toml.
+background       = "#0C0C10"
+background-alpha = 0.86
+text             = "#D8D3C8"
+placeholder      = "#8F959C"
+text-error       = "#E5383B"
+border           = "#8F959C"
+border-active    = "#C1121F"
+border-error     = "#E5383B"
+border-alpha     = 1.0
+border-width     = 1
+selection        = "#C1121F"
+selection-alpha  = 0.45

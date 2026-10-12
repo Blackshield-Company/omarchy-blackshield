@@ -1,0 +1,121 @@
+#!/bin/bash
+# Hold the ultrawide output on the forged timing across lock + DPMS.
+#
+# Omarchy blanks the lock screen with `omarchy-brightness-display off`
+# (dpms disable). On wake the panel retrains. Hyprland's rule is
+# 2560x1080@120, and 1920x1080@120.00 is a mode the sink always advertises.
+# If the forged 2560x1080@119.87 timing is missing from the list for a beat,
+# the fuzzy @120 match lands on 1920x1080 and stays there. No socket2 event
+# fires for DPMS that does not disconnect the connector, so this polls.
+#
+# Only corrects 1920x1080 (the failure) and 2560x1080@60 (preferred fallback).
+# Leaves an intentional 2560x1440 alone. Never touches the other output.
+#
+# OUTPUT  connector name (default DP-2). Also the cursor default_monitor.
+# DESC    description substring. Empty matches by OUTPUT name.
+# MODE    target mode (default 2560x1080@119.87).
+# POS     position (default auto).
+# SCALE   scale (default 1).
+
+set -u
+
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/blackshield-hold-wide.lock"
+# A predecessor started against a dead Hyprland exits within ~10s. Wait for
+# its lock so a fresh session actually takes over instead of exiting.
+flock -w 15 9 || exit 0
+echo $$ >"${XDG_RUNTIME_DIR:-/tmp}/blackshield-hold-wide.pid"
+
+OUTPUT="${OUTPUT:-DP-2}"
+DESC="${DESC:-}"
+MODE="${MODE:-2560x1080@119.87}"
+POS="${POS:-auto}"
+SCALE="${SCALE:-1}"
+LOG_TAG="hold-wide-mode"
+fails=0
+
+apply() {
+  local name="$1"
+  # keyword monitor is rejected on the Lua parser ("can't work with non-legacy
+  # parsers"). eval is what omarchy-hyprland-monitor-scaling uses.
+  hyprctl eval "hl.monitor({ output = \"${name}\", mode = \"${MODE}\", position = \"${POS}\", scale = ${SCALE} })" >/dev/null 2>&1
+  # That modeset rebuilds the KMS cursor plane from an empty blit (black square).
+  reassert_cursor
+}
+
+reassert_cursor() {
+  hyprctl eval "hl.config({ cursor = { default_monitor = \"${OUTPUT}\", no_hardware_cursors = 1, use_cpu_buffer = 1, hide_on_key_press = true, warp_on_change_workspace = 1 } })" >/dev/null 2>&1 || true
+}
+
+while true; do
+  json=$(timeout 2 hyprctl monitors -j 2>/dev/null) || {
+    fails=$((fails + 1))
+    # Compositor gone (restart). Release the lock so the new session's copy
+    # can take over.
+    (( fails >= 5 )) && exit 0
+    sleep 2
+    continue
+  }
+  fails=0
+
+  # Hyprland's own modeset (lock wake, hotplug) rebuilds the cursor plane too.
+  sig=$(jq -r '[.[] | "\(.name):\(.width)x\(.height)@\(.refreshRate):\(.dpmsStatus)"] | sort | join(",")' <<<"$json")
+  if [[ -n ${prev_sig:-} && $sig != "$prev_sig" ]]; then
+    reassert_cursor
+  fi
+  prev_sig=$sig
+
+  # Lock blank DPMS-offs the outputs, then the other output hotplugs itself
+  # back on and this one stays black. If a blank still landed, light every
+  # output so the lock surface is up. The brightness wrapper prevents the next blank.
+  locked=$(omarchy-shell lock isLocked 2>/dev/null || true)
+  if [[ $locked == true ]]; then
+    dark=$(jq '[.[] | select(.disabled != true and .dpmsStatus != true)] | length' <<<"$json")
+    if [[ ${dark:-0} != 0 ]]; then
+      logger -t "$LOG_TAG" "lock left ${dark} panel(s) dark; lighting them"
+      hyprctl dispatch 'hl.dsp.dpms({ action = "enable" })' >/dev/null 2>&1 || true
+      reassert_cursor
+      sleep 0.8
+      continue
+    fi
+  fi
+
+  read -r name width height refresh dpms disabled < <(
+    jq -r --arg d "$DESC" --arg o "$OUTPUT" '
+      if $d != "" then
+        [ .[] | select((.description // "") | contains($d)) ]
+      else
+        [ .[] | select(.name == $o) ]
+      end
+      | .[0] // empty
+      | "\(.name) \(.width) \(.height) \(.refreshRate) \(.dpmsStatus) \(.disabled)"
+    ' <<<"$json"
+  )
+
+  if [[ -z ${name:-} ]]; then
+    sleep 2
+    continue
+  fi
+
+  # Powered off or disabled: do not modeset it back on.
+  if [[ $dpms != "true" || $disabled == "true" ]]; then
+    sleep 1
+    continue
+  fi
+
+  wrong=0
+  if [[ $width == 1920 && $height == 1080 ]]; then
+    wrong=1
+  elif [[ $width == 2560 && $height == 1080 ]]; then
+    # Preferred forged timing is ~60Hz. Daily mode is ~120.
+    awk -v r="$refresh" 'BEGIN { exit !(r < 100) }' && wrong=1
+  fi
+
+  if (( wrong )); then
+    logger -t "$LOG_TAG" "correcting ${name} ${width}x${height}@${refresh} -> ${MODE}"
+    apply "$name"
+    sleep 0.8
+    continue
+  fi
+
+  sleep 2
+done
