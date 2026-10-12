@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell.Io
 
-// RX 9070 XT. Steel at rest, ember when warm, blood when it is actually working.
+// Discrete GPU. Steel at rest, ember when warm, blood when it is actually working.
 Item {
   id: root
 
@@ -63,7 +63,7 @@ Item {
     hoverEnabled: true
     acceptedButtons: Qt.LeftButton
     cursorShape: Qt.PointingHandCursor
-    onEntered: if (root.bar && root.bar.showTooltip) root.bar.showTooltip(root, "RX 9070 XT  ·  click for btop")
+    onEntered: if (root.bar && root.bar.showTooltip) root.bar.showTooltip(root, "GPU  ·  click for btop")
     onExited: if (root.bar && root.bar.hideTooltip) root.bar.hideTooltip(root)
     onClicked: root.triggerPress(Qt.LeftButton)
   }

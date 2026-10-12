@@ -14,8 +14,8 @@ Item {
   readonly property string stateHome: home + "/.local/state"
   readonly property string currentBackgroundLink: stateHome + "/omarchy/current/background"
 
-  // HDMI-A-3 / CR270C is the 1920x1080 secondary. It stays on the horse plate.
-  // DP-2 (ultrawide) and any other output follow the theme background symlink.
+  // Secondary (non-ultrawide) outputs stay on the horse plate.
+  // The ultrawide output follows the theme background symlink.
   readonly property string secondaryPlate: home + "/.config/omarchy/themes/blackshield/backgrounds/02-horse.png"
 
   function pinnedBackground(screen) {
@@ -23,9 +23,9 @@ Item {
     var connector = String(screen.name || "")
     var model = String(screen.model || "")
     var w = Number(screen.width || 0)
-    // Ultrawide (DP-2 / GMQ3225, 2560-wide) follows the theme plate.
-    // Every other output, including HDMI-A-3, gets the horse plate.
-    var ultrawide = w >= 2400 || connector === "DP-2" || model.indexOf("GMQ3225") !== -1
+    // Ultrawide (2400+ px wide, or the configured connector) follows the theme plate.
+    // Every other output gets the horse plate.
+    var ultrawide = w >= 2400 || connector === "DP-2"
     if (ultrawide) return ""
     return secondaryPlate
   }

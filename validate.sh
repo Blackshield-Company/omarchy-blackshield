@@ -63,9 +63,9 @@ for f in 01-camp.png 02-horse.png 03-contract.png 04-fight.png; do
 done
 ok "backgrounds"
 
-[[ "$(wc -c < "$theme/edid/skg-2560x1080.bin")" -eq 256 ]] || bad "edid bin is not 256 bytes"
-if [[ -f /usr/lib/firmware/edid/skg-2560x1080.bin ]]; then
-  cmp -s "$theme/edid/skg-2560x1080.bin" /usr/lib/firmware/edid/skg-2560x1080.bin \
+[[ "$(wc -c < "$theme/edid/ultrawide-2560x1080.bin")" -eq 256 ]] || bad "edid bin is not 256 bytes"
+if [[ -f /usr/lib/firmware/edid/ultrawide-2560x1080.bin ]]; then
+  cmp -s "$theme/edid/ultrawide-2560x1080.bin" /usr/lib/firmware/edid/ultrawide-2560x1080.bin \
     || bad "repo edid does not match the live firmware bin"
   ok "edid matches live firmware"
 fi

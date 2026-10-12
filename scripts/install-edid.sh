@@ -10,12 +10,12 @@
 # OUTPUT     Connector name (default DP-2). Must be present under /sys/class/drm/.
 # --check    Print connectors, the cmdline param, and whether the live EDID
 #            matches the bin. Writes nothing.
-# EDID_NAME  Firmware filename under theme/blackshield/edid/ (default skg-2560x1080.bin).
+# EDID_NAME  Firmware filename under theme/blackshield/edid/ (default ultrawide-2560x1080.bin).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUTPUT="${OUTPUT:-DP-2}"
-EDID_NAME="${EDID_NAME:-skg-2560x1080.bin}"
+EDID_NAME="${EDID_NAME:-ultrawide-2560x1080.bin}"
 PARAM="drm.edid_firmware=${OUTPUT}:edid/${EDID_NAME}"
 SRC="$ROOT/theme/blackshield/edid/$EDID_NAME"
 CHECK_ONLY=0
