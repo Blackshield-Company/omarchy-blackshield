@@ -1,3 +1,5 @@
+![omarchy-blackshield](.github/preview.png)
+
 # Blackshield
 
 Blackshield — an Omarchy post-install theme and ultrawide kit.
