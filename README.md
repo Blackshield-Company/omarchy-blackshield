@@ -19,7 +19,7 @@ Omarchy, already installed. `hold-wide-mode` needs Hyprland and `jq`. The EDID p
 ## Install
 
 ```bash
-git clone https://github.com/Blackshield-Company/omarchy-blackshield
+git clone https://github.com/synthalorian/omarchy-blackshield
 cd omarchy-blackshield
 ./install.sh [phase]
 ```
